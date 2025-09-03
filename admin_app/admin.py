@@ -1,18 +1,26 @@
-# admin.py
 from datetime import timedelta, date
 from django.contrib import admin, messages
 from django.utils import timezone
 from django.apps import apps
 from django.contrib.admin import AdminSite
-from .models import Users, Prompts 
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
+
+from .models import Users, Prompts, ChatSessions
+
+
+# Inline Prompts inside ChatSession detail page
+class PromptsInline(admin.TabularInline):
+    model = Prompts
+    extra = 0
+    fields = ('text', 'ai_response', 'status', 'session_order', 'created_at')
+    readonly_fields = ('created_at',)
 
 
 @admin.register(Users)
 class UsersAdmin(admin.ModelAdmin):
     list_display = ("id", "phone_number", "name", "age", "location", "status", "suspended_until", "created_at")
-    list_filter = ("status", "location", "created_at")  # Using our custom filter
+    list_filter = ("status", "location", "created_at")
     search_fields = ("phone_number", "name", "location")
     readonly_fields = ("created_at",)
     actions = ["make_active", "suspend_for_30_days", "block_users"]
@@ -33,30 +41,39 @@ class UsersAdmin(admin.ModelAdmin):
 
 @admin.register(Prompts)
 class PromptsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'session', 'text', 'ai_response', 'status', 'session_order', 'created_at', 'moderation_reason')
-    # Filter and search options
-    list_filter = ('status', 'created_at')
-    search_fields = ('text', 'ai_response', 'moderation_reason')
-    # The ForeignKey relationship should be handled automatically, so list_select_related isn't strictly necessary here but can be added for performance if you have many related objects.
-    list_select_related = ('session',)
-    # Specify fields for searching within the related ChatSession model
+    list_display = (
+        'id', 'get_user', 'text',
+        'ai_response', 'status', 'session_order',
+        'created_at', 'moderation_reason'
+    )
+    list_filter = ('status', 'created_at', 'session__user')
+    search_fields = (
+        'text', 'ai_response', 'moderation_reason',
+        'session__user__name', 'session__user__phone_number'
+    )
+    list_select_related = ('session__user',)
     raw_id_fields = ('session',)
+    ordering = ('session__user__name', 'created_at')  
+    list_per_page = 25  
+
+    def get_user(self, obj):
+        return obj.session.user if obj.session and obj.session.user else "No User"
+    get_user.admin_order_field = 'session__user__name'
+    get_user.short_description = 'User'
 
 
 
-# ModelAdmin for the ChatSessions model
 # @admin.register(ChatSessions)
 # class ChatSessionsAdmin(admin.ModelAdmin):
-#     # Display all the fields from your model in the changelist view
 #     list_display = ('id', 'user', 'message_count', 'is_completed', 'last_activity_at', 'created_at')
-#     # Filter and search options
 #     list_filter = ('is_completed', 'created_at')
 #     search_fields = ('user__phone_number', 'user__name',)
-#     # Use select_related for performance
 #     list_select_related = ('user',)
-#     # Use a raw ID field for the foreign key to avoid performance issues
 #     raw_id_fields = ('user',)
+#     inlines = [PromptsInline]  # Prompts visible inside ChatSessions
 
+
+# Custom Admin site
 class MyAdminSite(AdminSite):
     site_header = "Welcome to Nudge"
     site_title = "Nudge Admin"
@@ -102,7 +119,6 @@ class MyAdminSite(AdminSite):
                     created_at__date__range=[start_date, end_date]
                 ).count()
         except ValueError:
-            # Fallback if date strings are invalid
             users_count = 0
 
         context = {
@@ -118,12 +134,12 @@ class MyAdminSite(AdminSite):
 
         return super().index(request, extra_context=context)
 
-# create a global admin site instance
+
+# Global admin site instance
 my_admin_site = MyAdminSite(name="myadmin")
 
-# Register your models again to the custom site
 my_admin_site.register(Users, UsersAdmin)
 my_admin_site.register(Prompts, PromptsAdmin)
+# my_admin_site.register(ChatSessions, ChatSessionsAdmin)
 my_admin_site.register(User, UserAdmin)
 my_admin_site.register(Group, GroupAdmin)
-# my_admin_site.register(ChatSessions, ChatSessionsAdmin) 
