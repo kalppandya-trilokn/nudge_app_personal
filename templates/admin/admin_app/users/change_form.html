@@ -1,0 +1,126 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <style>
+        /* ===== FORM CARD ===== */
+        .card {
+            background: linear-gradient(135deg, #065f46, #047857); /* green shades */
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            padding: 32px;
+            border: none;
+            max-width: 900px;
+            margin: 20px auto;
+            color: #ffffff; /* white text everywhere inside */
+        }
+
+        /* ===== HEADINGS ===== */
+        .card h2, .inline-group h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 8px;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        /* ===== FIELD LABELS ===== */
+        .form-row label, 
+        .form-row .fieldBox label {
+            font-weight: 600;
+            color: #e0f2f1; /* light teal white */
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* ===== INPUTS & TEXTAREAS ===== */
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="password"],
+        textarea,
+        select {
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            padding: 12px 14px;
+            width: 100%;
+            font-size: 0.95rem;
+            background: rgba(255,255,255,0.1); /* translucent input bg */
+            color: #ffffff;
+            transition: all 0.25s ease-in-out;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #bbf7d0;
+            box-shadow: 0 0 0 4px rgba(134,239,172,0.3);
+            outline: none;
+            background: rgba(255,255,255,0.15);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Required field star */
+        .required label:after {
+            content: " *";
+            color: #f87171;
+        }
+
+        /* Spacing */
+        .aligned .form-row {
+            margin-bottom: 22px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .submit-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .submit-row input {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .submit-row input[name="_save"] {
+            background: #22c55e; /* bright green */
+            color: white;
+            border: none;
+        }
+        .submit-row input[name="_save"]:hover {
+            background: #16a34a;
+            transform: translateY(-1px);
+        }
+
+        .submit-row input[name="_delete"] {
+            background: #ef4444;
+            color: white;
+            border: none;
+        }
+        .submit-row input[name="_delete"]:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .submit-row input:not([name="_save"]):not([name="_delete"]) {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: #ffffff;
+        }
+        .submit-row input:not([name="_save"]):not([name="_delete"]):hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+{% endblock %}

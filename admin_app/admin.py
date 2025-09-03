@@ -4,7 +4,9 @@ from django.contrib import admin, messages
 from django.utils import timezone
 from django.apps import apps
 from django.contrib.admin import AdminSite
-from .models import Users, Prompts, ChatSessions
+from .models import Users, Prompts 
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.admin import UserAdmin, GroupAdmin
 
 
 @admin.register(Users)
@@ -122,4 +124,6 @@ my_admin_site = MyAdminSite(name="myadmin")
 # Register your models again to the custom site
 my_admin_site.register(Users, UsersAdmin)
 my_admin_site.register(Prompts, PromptsAdmin)
+my_admin_site.register(User, UserAdmin)
+my_admin_site.register(Group, GroupAdmin)
 # my_admin_site.register(ChatSessions, ChatSessionsAdmin) 

@@ -1,6 +1,0 @@
-# Ignore all migration files
-*/migrations/*.py
-*/migrations/*.pyc
-
-# But not __init__.py (so Django still sees the migration packages)
-!*/migrations/__init__.py

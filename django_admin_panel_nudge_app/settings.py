@@ -78,7 +78,7 @@ DATABASES = {
      'default': {
 
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sms_ai_final_approach',         # <-- Use the database name you created in pgAdmin
+        'NAME': 'test',         # <-- Use the database name you created in pgAdmin
         'USER': 'postgres',       # <-- Use the username you created in pgAdmin
         'PASSWORD': '0608', # <-- Use the password you set for hello_user
         'HOST': 'localhost',          # Usually 'localhost' if PostgreSQL is on your PC
@@ -180,11 +180,11 @@ JAZZMIN_SETTINGS = {
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 # Gmail example (works with app passwords, not your actual Gmail password)
-EMAIL_HOST = ""
+EMAIL_HOST = "smtp-relay.brevo.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""  # generate from Google account
+EMAIL_HOST_USER = "jenifer@appgurus.com.au"
+EMAIL_HOST_PASSWORD = "Gx1dRHap90fzXw6P"  # generate from Google account
 
 # Default sender
 DEFAULT_FROM_EMAIL = "noreply@yourdomain.com"
