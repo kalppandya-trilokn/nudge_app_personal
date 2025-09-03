@@ -1,0 +1,218 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #333;
+            --background-gradient-light: linear-gradient(135deg, #f8fafc, #eef2f7);
+            --background-gradient-dark: linear-gradient(135deg, #0f172a, #1e293b);
+            --text-light: #ecf0f1;
+            --text-dark: #34495e;
+            --border-color: #bdc3c7;
+            --input-bg: #fff;
+            --button-hover: #45a049;
+            --link-color: #3498db;
+            --link-hover: #2980b9;
+        }
+
+        body {
+            background: var(--background-gradient-dark);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .login-card {
+            background-color: #ffffffcc; /* glassy effect */
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .login-logo {
+            margin-bottom: 20px;
+        }
+        
+        .logo-img {
+            max-height: 100px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: rotate(-3deg) scale(1.05);
+        }
+
+        .welcome-text {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .form-control {
+            width: calc(100% - 20px);
+            padding: 12px 10px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            transform: scale(1.02);
+        }
+
+        .form-control::placeholder {
+            color: #95a5a6;
+        }
+
+        .login-button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .login-button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .forgot-password {
+            margin-top: 20px;
+        }
+        
+        .forgot-password a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        .forgot-password a:hover {
+            color: var(--link-hover);
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #c0392b;
+            background-color: #fce4e4;
+            border: 1px solid #c0392b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            animation: shake 0.3s ease;
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            50% { transform: translateX(4px); }
+            75% { transform: translateX(-4px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+            .login-card {
+                padding: 20px;
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-logo">
+            <img src="{% static 'images/general-img-landscape.png' %}" alt="Nudge App Logo" class="logo-img">
+        </div>
+
+        <h2 class="welcome-text">Welcome to Nudge Admin Portal</h2>
+
+        <form action="{{ app_path }}" method="post" class="login-form">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="error-message">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                    {% if form.username.errors %}
+                        <p>{{ form.username.label }}: {{ form.username.errors|join:', ' }}</p>
+                    {% endif %}
+                    {% if form.password.errors %}
+                        <p>{{ form.password.label }}: {{ form.password.errors|join:', ' }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="login-button">
+                {% trans "Log in" %}
+            </button>
+            
+            {% url 'password_reset' as password_reset_url %}
+            {% if password_reset_url %}
+            <div class="forgot-password">
+                <a href="{{ password_reset_url }}">{% trans 'Forgot password?' %}</a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>

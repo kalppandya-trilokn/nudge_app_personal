@@ -1,0 +1,140 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">User Analytics</h1>
+    </div>
+
+    <!-- Filter -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-end g-3">
+
+                <!-- Filter Select -->
+                <div class="col-md-4">
+                    <label for="filter-select" class="form-label fw-semibold text-secondary">Filter By</label>
+                    <select class="form-select border-0 shadow-sm rounded-pill px-3 py-2" id="filter-select">
+                        <option value="all" {% if filter_option == 'all' %}selected{% endif %}>All</option>
+                        <option value="daily" {% if filter_option == 'daily' %}selected{% endif %}>Daily</option>
+                        <option value="weekly" {% if filter_option == 'weekly' %}selected{% endif %}>Weekly</option>
+                        <option value="monthly" {% if filter_option == 'monthly' %}selected{% endif %}>Monthly</option>
+                        <option value="yearly" {% if filter_option == 'yearly' %}selected{% endif %}>Yearly</option>
+                        <option value="to_date" {% if filter_option == 'to_date' %}selected{% endif %}>To Date</option>
+                        <option value="custom_range" {% if filter_option == 'custom_range' %}selected{% endif %}>Custom Date Range</option>
+                    </select>
+                </div>
+
+                <!-- Single Date -->
+                <div class="col-md-4" id="single-date-picker" style="display: none;">
+                    <label class="form-label fw-semibold text-secondary">Select Date</label>
+                    <div class="input-group shadow-sm rounded-pill overflow-hidden">
+                        <input type="date" class="form-control border-0 px-3" id="single-date" value="{{ end_date_str|default:'' }}">
+                        <button class="btn btn-primary px-4" id="single-date-button">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Date Range -->
+                <div class="col-md-6" id="date-pickers" style="display: none;">
+                    <label class="form-label fw-semibold text-secondary">Select Range</label>
+                    <div class="input-group shadow-sm rounded-pill overflow-hidden">
+                        <input type="date" class="form-control border-0 px-3" id="start-date" value="{{ start_date_str|default:'' }}">
+                        <input type="date" class="form-control border-0 px-3" id="end-date" value="{{ end_date_str|default:'' }}">
+                        <button class="btn btn-primary px-4" id="filter-button">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Stats -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <h2 class="display-4 fw-bold mb-0">
+                        {{ total_users|default:0 }}
+                    </h2>
+                    <p class="text-uppercase fw-semibold mb-0">Total Users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card bg-gradient-info text-white shadow-sm h-100">
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <h2 class="display-4 fw-bold mb-0">
+                        {% if filter_option == 'all' %}
+                            {{ total_users|default:0 }}
+                        {% else %}
+                            {{ users_count|default:0 }}
+                        {% endif %}
+                    </h2>
+                    <p class="text-uppercase fw-semibold mb-0">
+                        {% if filter_option == 'all' %} All Users
+                        {% elif filter_option == 'daily' %} Daily Users
+                        {% elif filter_option == 'weekly' %} Weekly Users
+                        {% elif filter_option == 'monthly' %} Monthly Users
+                        {% elif filter_option == 'yearly' %} Yearly Users
+                        {% elif filter_option == 'to_date' %} Users To Date
+                        {% elif filter_option == 'custom_range' %} Custom Range Users
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterSelect = document.getElementById('filter-select');
+    const datePickers = document.getElementById('date-pickers');
+    const singleDatePicker = document.getElementById('single-date-picker');
+    const startDateInput = document.getElementById('start-date');
+    const endDateInput = document.getElementById('end-date');
+    const singleDateInput = document.getElementById('single-date');
+    const filterButton = document.getElementById('filter-button');
+    const singleDateButton = document.getElementById('single-date-button');
+
+    function updateUI() {
+        const selectedValue = filterSelect.value;
+        datePickers.style.display = 'none';
+        singleDatePicker.style.display = 'none';
+        
+        if (selectedValue === 'custom_range') {
+            datePickers.style.display = 'block';
+        } else if (selectedValue === 'to_date') {
+            singleDatePicker.style.display = 'block';
+        }
+    }
+
+    filterSelect.addEventListener('change', function() {
+        const selectedValue = this.value;
+        if (selectedValue === 'custom_range' || selectedValue === 'to_date') {
+            updateUI();
+        } else {
+            window.location.href = `?filter=${selectedValue}`;
+        }
+    });
+
+    filterButton.addEventListener('click', function() {
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+        if (startDate && endDate) {
+            window.location.href = `?filter=custom_range&start_date=${startDate}&end_date=${endDate}`;
+        }
+    });
+
+    singleDateButton.addEventListener('click', function() {
+        const singleDate = singleDateInput.value;
+        if (singleDate) {
+            window.location.href = `?filter=to_date&end_date=${singleDate}`;
+        }
+    });
+
+    updateUI();
+});
+</script>
+{% endblock %}

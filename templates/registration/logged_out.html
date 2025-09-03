@@ -1,0 +1,110 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logged Out</title>
+    
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2c3e50;
+            --background-gradient: linear-gradient(135deg, #2c3e50, #4CAF50);
+            --text-light: #ecf0f1;
+            --card-bg: #ffffff;
+            --button-hover: #45a049;
+            --link-color: #3498db;
+        }
+
+        body {
+            background: var(--background-gradient);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .logout-card {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            max-width: 420px;
+            width: 100%;
+            animation: fadeIn 0.8s ease-out;
+            transform: translateY(10px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(10px); }
+        }
+
+        .logout-logo {
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            max-height: 100px;
+            border-radius: 50%;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+
+        .logout-message {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .logout-message-body {
+            font-size: 1rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .login-again-button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .login-again-button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="logout-card">
+        <div class="logout-logo">
+            <img src="{% static 'images/general-img-landscape.png' %}" alt="Nudge App Logo" class="logo-img">
+        </div>
+        
+        <h2 class="logout-message">{% trans "Thank you!" %}</h2>
+        <p class="logout-message-body">{% trans "You have been successfully logged out." %}</p>
+        
+        <a href="{% url 'admin:index' %}" class="login-again-button">{% trans "Log in again" %}</a>
+    </div>
+</body>
+</html>

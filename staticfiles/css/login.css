@@ -1,0 +1,7 @@
+/* Custom CSS for the login page logo */
+.brand-logo img {
+    max-width: 150px; /* Adjust this value to your desired width */
+    max-height: 150px; /* Adjust this value to your desired height */
+    border-radius: 50%; /* Makes the image circular */
+    border: 2px solid #ccc; /* Optional: adds a subtle border */
+}
