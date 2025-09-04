@@ -45,19 +45,10 @@
     </div>
 
     <!-- Stats -->
+    <!-- Stats -->
     <div class="row">
         <div class="col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center d-flex flex-column justify-content-center">
-                    <h2 class="display-4 fw-bold mb-0">
-                        {{ total_users|default:0 }}
-                    </h2>
-                    <p class="text-uppercase fw-semibold mb-0">Total Users</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-4">
-            <div class="card bg-gradient-info text-white shadow-sm h-100">
+            <div class="card {% if filter_option == 'all' %}shadow-sm{% else %}bg-gradient-info text-white shadow-sm{% endif %} h-100">
                 <div class="card-body text-center d-flex flex-column justify-content-center">
                     <h2 class="display-4 fw-bold mb-0">
                         {% if filter_option == 'all' %}
@@ -80,6 +71,8 @@
             </div>
         </div>
     </div>
+</div>
+
 </div>
 
 <script>

@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-pz2!)=6#ss+23^e4c&i!=dbq++r3ml5ro+#f)qlmw!0s3kbkdx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -49,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'django_admin_panel_nudge_app.urls'
@@ -78,11 +83,11 @@ DATABASES = {
      'default': {
 
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'test',         # <-- Use the database name you created in pgAdmin
-        'USER': 'postgres',       # <-- Use the username you created in pgAdmin
-        'PASSWORD': '0608', # <-- Use the password you set for hello_user
-        'HOST': 'localhost',          # Usually 'localhost' if PostgreSQL is on your PC
-        'PORT': '5432',
+        'NAME': os.getenv("DB_NAME"),         # <-- Use the database name you created in pgAdmin
+        'USER': os.getenv("DB_USER"),       # <-- Use the username you created in pgAdmin
+        'PASSWORD': os.getenv("DB_PASSWORD"), # <-- Use the password you set for hello_user
+        'HOST': os.getenv("DB_HOST"),          # Usually 'localhost' if PostgreSQL is on your PC
+        'PORT': os.getenv("DB_PORT"),
     }
 }
 
@@ -128,6 +133,8 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Where Django will collect *all* static files for production
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -180,11 +187,11 @@ JAZZMIN_SETTINGS = {
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 # Gmail example (works with app passwords, not your actual Gmail password)
-EMAIL_HOST = "smtp-relay.brevo.com"
+EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "jenifer@appgurus.com.au"
-EMAIL_HOST_PASSWORD = "Gx1dRHap90fzXw6P"  # generate from Google account
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # generate from Google account
 
 # Default sender
 DEFAULT_FROM_EMAIL = "noreply@yourdomain.com"
